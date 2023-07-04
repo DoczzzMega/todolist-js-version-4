@@ -131,6 +131,7 @@ function renderTasksFromStorage() {
     } else {
         titlesArray = [];
     }
+    checkEmptyStorage();
     console.log(titlesArray);
 }
 
