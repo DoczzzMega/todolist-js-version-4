@@ -42,6 +42,7 @@ btnAllremove.addEventListener('click', deleteAllCompletedTasks);
 function addTask(taskValue) {
     titlesArray.push({ id: `${Date.now()}`, title: taskValue, isCompleted: false });
     console.log(titlesArray);
+    localStorage.setItem('reset', 'false');
     sendTaskToStorage();
 }
 
@@ -61,15 +62,18 @@ function deleteTask(taskNode) {
 function renderTask(task) {
     const {id, title, isCompleted} = task;
     const classTask = isCompleted ? 'task-title--done' : undefined;
-    const classBtn = isCompleted ? 'btn-done-complete' : undefined;
+    const classBtn = `btn-action ${isCompleted ? 'btn-done-complete' : ''}`;
 
     const li = document.createElement('li');
     li.dataset.id = id;
-    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'task-item', `${classTask}`);
+    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'task-item');
+    if (isCompleted) {
+        li.classList.add(classTask);
+    }
     li.innerHTML = `
                 <span class="task-title">${title}</span>
                 <div class="task-item__buttons">
-                    <button type="button" data-action="done" class="btn-action ${classBtn}">
+                    <button type="button" data-action="done" class="${classBtn}">
                         <img src="./img/tick.svg" alt="Done" width="18" height="18">
                     </button>
                     <button type="button" data-action="delete" class="btn-action">
@@ -117,8 +121,11 @@ function sendTaskToStorage() {
 
 function checkEmptyStorage() {
     let emptyList = document.querySelector('.empty-list__title');   
-    if (localStorage.getItem('titles') == '[]') {
+    if (localStorage.getItem('titles') === '[]' && localStorage.getItem('reset') === 'false') {
         emptyList.innerText = 'Вы сделали все дела! Идите спать';
+        localStorage.setItem('reset', 'true');
+    } else if (localStorage.getItem('reset') === 'true') {
+        emptyList.innerText = 'Список дел пуст';
     } else {
         emptyList.innerText = 'Список дел';
     }
