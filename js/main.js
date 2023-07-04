@@ -39,29 +39,29 @@ ul.addEventListener('click', e => {
 btnAllremove.addEventListener('click', deleteAllCompletedTasks);
 
 
-function addTask(task) {
-    titlesArray.push({ id: `${Date.now()}`, title: task, isCompleted: false });
+function addTask(taskValue) {
+    titlesArray.push({ id: `${Date.now()}`, title: taskValue, isCompleted: false });
     console.log(titlesArray);
     sendTaskToStorage();
 }
 
-function deleteTask(task) {
+function deleteTask(taskNode) {
     // let currentObj = titlesArray.find(item => item.id === currentEl.dataset.id);
-    titlesArray = titlesArray.filter(item => item.id !== task.dataset.id);
+    titlesArray = titlesArray.filter(item => item.id !== taskNode.dataset.id);
     // titlesArray.forEach((item, index) => {
-    //     if (item.id === task.dataset.id) {
+    //     if (item.id === taskNode.dataset.id) {
     //         titlesArray.splice(index, 1);
     //     }
     // });
-    task.remove();
+    taskNode.remove();
     console.log(titlesArray);
     sendTaskToStorage();
 }
 
 function renderTask(task) {
     const {id, title, isCompleted} = task;
-    const classTask = isCompleted ? 'task-title--done' : '';
-    const classBtn = isCompleted ? 'btn-done-complete' : '';
+    const classTask = isCompleted ? 'task-title--done' : undefined;
+    const classBtn = isCompleted ? 'btn-done-complete' : undefined;
 
     const li = document.createElement('li');
     li.dataset.id = id;
@@ -81,11 +81,11 @@ function renderTask(task) {
 }
 
 
-function toggleCompletedTask(task) {
-    task.classList.toggle('task-title--done');
+function toggleCompletedTask(taskNode) {
+    taskNode.classList.toggle('task-title--done');
 
     titlesArray.forEach(item => {
-        if (item.id === task.dataset.id) {
+        if (item.id === taskNode.dataset.id) {
             item.isCompleted = !item.isCompleted;
         }
     });
@@ -127,20 +127,11 @@ function checkEmptyStorage() {
 function renderTasksFromStorage() {
     titlesArray = JSON.parse(localStorage.getItem('titles'));
     if (Array.isArray(titlesArray) && titlesArray.length > 0) {
-        titlesArray.forEach(item => {
-
-            if (item.isCompleted) {
-                renderTask(item.title, item.id, 'task-title--done', 'btn-done-complete');
-                console.log('Completed');
-            } else {
-                renderTask(item.title, item.id);
-                console.log('NotCompleted');
-            }
-        });
+        titlesArray.forEach(item => renderTask(item));
     } else {
         titlesArray = [];
     }
     console.log(titlesArray);
 }
 
-// renderTasksFromStorage();
+renderTasksFromStorage();
