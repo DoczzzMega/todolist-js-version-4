@@ -126,9 +126,12 @@ function checkEmptyStorage() {
         localStorage.setItem('reset', 'true');
     } else if (localStorage.getItem('reset') === 'true') {
         emptyList.innerText = 'Список дел пуст';
+    } else if (localStorage.getItem('titles') === null) {
+        emptyList.innerText = 'Список дел пуст';
     } else {
         emptyList.innerText = 'Список дел';
     }
+    console.log(localStorage.getItem('titles'));
 }
 
 function renderTasksFromStorage() {
